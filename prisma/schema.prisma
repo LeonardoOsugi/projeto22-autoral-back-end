@@ -1,0 +1,80 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model addresses {
+  id          Int      @id @default(autoincrement())
+  user_id     Int
+  city_id     Int
+  street      String   @db.VarChar(255)
+  number      String   @db.VarChar(4)
+  complement  String   @db.VarChar(50)
+  postal_code String   @db.VarChar(11)
+  created_at  DateTime @default(dbgenerated("timezone('America/Sao_Paulo'::text, (CURRENT_DATE)::timestamp with time zone)")) @db.Timestamp(6)
+  cities      cities   @relation(fields: [city_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  users       users    @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+}
+
+model carts {
+  id         Int        @id @default(autoincrement())
+  user_id    Int
+  product_id Int
+  created_at DateTime   @default(dbgenerated("timezone('America/Sao_Paulo'::text, (CURRENT_DATE)::timestamp with time zone)")) @db.Timestamp(6)
+  products   products   @relation(fields: [product_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  users      users      @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  payments   payments[]
+}
+
+model cities {
+  id         Int         @id @default(autoincrement())
+  state_id   Int
+  name       String      @db.VarChar(50)
+  created_at DateTime    @default(dbgenerated("timezone('America/Sao_Paulo'::text, (CURRENT_DATE)::timestamp with time zone)")) @db.Timestamp(6)
+  addresses  addresses[]
+  states     states      @relation(fields: [state_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+}
+
+model payments {
+  id               Int       @id @default(autoincrement())
+  cart_id          Int
+  value            String
+  card_issuer      String
+  card_last_digits String
+  status           String    @default("INPROGRESS")
+  created_at       DateTime  @default(dbgenerated("timezone('America/Sao_Paulo'::text, (CURRENT_DATE)::timestamp with time zone)")) @db.Timestamp(6)
+  updated_at       DateTime? @db.Timestamp(6)
+  carts            carts     @relation(fields: [cart_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+}
+
+model products {
+  id         Int      @id @default(autoincrement())
+  img        String
+  name       String   @db.VarChar(100)
+  price      Int
+  slot       Int
+  created_at DateTime @default(dbgenerated("timezone('America/Sao_Paulo'::text, (CURRENT_DATE)::timestamp with time zone)")) @db.Timestamp(6)
+  carts      carts[]
+}
+
+model states {
+  id         Int      @id @default(autoincrement())
+  name       String   @db.VarChar(50)
+  created_at DateTime @default(dbgenerated("timezone('America/Sao_Paulo'::text, (CURRENT_DATE)::timestamp with time zone)")) @db.Timestamp(6)
+  cities     cities[]
+}
+
+model users {
+  id         Int         @id @default(autoincrement())
+  name       String      @db.VarChar(255)
+  email      String      @unique @db.VarChar(255)
+  password   String      @db.VarChar(6)
+  category   String      @default("CLIENT")
+  created_at DateTime    @default(dbgenerated("timezone('America/Sao_Paulo'::text, (CURRENT_DATE)::timestamp with time zone)")) @db.Timestamp(6)
+  addresses  addresses[]
+  carts      carts[]
+}
