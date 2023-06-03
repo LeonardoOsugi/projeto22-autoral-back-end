@@ -40,15 +40,15 @@ model cities {
 }
 
 model payments {
-  id               Int       @id @default(autoincrement())
+  id               Int           @id @default(autoincrement())
   cart_id          Int
   value            String
   card_issuer      String
   card_last_digits String
-  status           String    @default("INPROGRESS")
-  created_at       DateTime  @default(dbgenerated("timezone('America/Sao_Paulo'::text, (CURRENT_DATE)::timestamp with time zone)")) @db.Timestamp(6)
-  updated_at       DateTime? @db.Timestamp(6)
-  carts            carts     @relation(fields: [cart_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  status           PaymentStatus @default(INPROGRESS)
+  created_at       DateTime      @default(dbgenerated("timezone('America/Sao_Paulo'::text, (CURRENT_DATE)::timestamp with time zone)")) @db.Timestamp(6)
+  updated_at       DateTime?     @db.Timestamp(6)
+  carts            carts         @relation(fields: [cart_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
 }
 
 model products {
@@ -69,12 +69,24 @@ model states {
 }
 
 model users {
-  id         Int         @id @default(autoincrement())
-  name       String      @db.VarChar(255)
-  email      String      @unique @db.VarChar(255)
-  password   String      @db.VarChar(6)
-  category   String      @default("CLIENT")
-  created_at DateTime    @default(dbgenerated("timezone('America/Sao_Paulo'::text, (CURRENT_DATE)::timestamp with time zone)")) @db.Timestamp(6)
+  id         Int          @id @default(autoincrement())
+  name       String       @db.VarChar(255)
+  email      String       @unique @db.VarChar(255)
+  password   String
+  category   UserCategory @default(CLIENT)
+  created_at DateTime     @default(dbgenerated("timezone('America/Sao_Paulo'::text, (CURRENT_DATE)::timestamp with time zone)")) @db.Timestamp(6)
   addresses  addresses[]
   carts      carts[]
+}
+
+enum PaymentStatus {
+  INPROGRESS
+  PAID
+  NOTPAID
+}
+
+enum UserCategory {
+  CLIENT
+  FUNC
+  DEALER
 }
