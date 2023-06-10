@@ -10,8 +10,17 @@ async function getProducts(): Promise<products[]>{
     return products;
 }
 
+async function getProductsId(id: number){
+    const product = await productsRepositories.findProductsById(id);
+
+    if(!product) throw notFoundError();
+
+    return product;
+}
+
 const productService = {
-    getProducts
+    getProducts,
+    getProductsId
 }
 
 export default productService;

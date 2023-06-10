@@ -13,3 +13,14 @@ export async function getProducts(req: Request, res: Response, next: NextFunctio
         next(e)
     }
 }
+
+export async function getProductsId(req: Request, res: Response, next: NextFunction){
+    const {id} = req.params;
+    try{
+        const product = await productService.getProductsId(+id);
+
+        res.status(httpStatus.OK).send(product);
+    }catch(e){
+        next(e);
+    }
+}
