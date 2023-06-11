@@ -4,7 +4,7 @@ import httpStatus from "http-status";
 import jwt from 'jsonwebtoken';
 
 export async function authenticateToken(req: AuthenticatedRequest, res: Response, next: NextFunction){
-    const { authorization } = req['headers'];
+    const { authorization } = req.headers;
 
     if(!authorization) throw unauthorizedError();
 
