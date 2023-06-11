@@ -7,6 +7,6 @@ const usersRouter = Router();
 
 usersRouter
 .post('/sign-up',validateBody(createUserSchema), createUser )
-.post('/sing-in', validateBody(signInSchema), loginUser)
+.post('/sign-in', validateBody(signInSchema), loginUser)
 
 export {usersRouter}

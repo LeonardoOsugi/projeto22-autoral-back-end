@@ -25,7 +25,7 @@ export async function loginUser(req: Request, res: Response){
   try {
     const result = await userService.signIn({ email, password });
 
-    return res.status(httpStatus.OK).send({token: result});
+    return res.status(httpStatus.OK).send(result);
   } catch (error) {
     return res.status(httpStatus.UNAUTHORIZED).send({});
   }
