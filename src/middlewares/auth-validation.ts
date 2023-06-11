@@ -3,8 +3,8 @@ import { NextFunction, Request, Response } from "express";
 import httpStatus from "http-status";
 import jwt from 'jsonwebtoken';
 
-export async function authenticateToken(req: Request, res: Response, next: NextFunction){
-    const { authorization } = req.headers;
+export async function authenticateToken(req: AuthenticatedRequest, res: Response, next: NextFunction){
+    const { authorization } = req['headers'];
 
     if(!authorization) throw unauthorizedError();
 
@@ -18,7 +18,7 @@ export async function authenticateToken(req: Request, res: Response, next: NextF
     try{
       const { userId } = jwt.verify(token, process.env.JWT_SECRET) as JWTPayload;
 
-      res.locals.user = userId;
+      req.userId = userId;
 
       return next();
     }catch(err){
@@ -30,7 +30,7 @@ function generateUnauthorizedResponse(res: Response) {
   res.status(httpStatus.UNAUTHORIZED).send(unauthorizedError());
 }
 
-// export type AuthenticatedRequest = Request & JWTPayload;
+export type AuthenticatedRequest = Request & JWTPayload;
 
 type JWTPayload = {
   userId: number;
