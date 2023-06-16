@@ -1,5 +1,4 @@
 
-import { CreateUserParams } from "@/services";
 import Joi from "joi";
 
 
