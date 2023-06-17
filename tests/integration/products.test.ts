@@ -26,6 +26,6 @@ describe('GET /products', () => {
 describe('GET /products/:id', () => {
     it('should respond with status 200 if productsId exist', async() => {
         const response = await server.get('/products/1');
-        expect(response.status).toBe(httpStatus.OK);
+        expect(response.status).toEqual(httpStatus.OK);
     });
 });

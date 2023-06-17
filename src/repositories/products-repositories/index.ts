@@ -10,7 +10,21 @@ async function findProductsById(id: number){
     return prisma.products.findFirst({where: {id}});
 }
 
-export default {
-    findProducts,
-    findProductsById
+async function updateProductById(product_id: number, slot: number){
+    return prisma.products.update({
+        where:{
+            id: product_id
+        },
+        data:{
+            slot
+        }
+    })
 }
+
+const productRepository =  {
+    findProducts,
+    findProductsById,
+    updateProductById
+}
+
+export default productRepository;

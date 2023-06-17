@@ -13,6 +13,11 @@ async function findByEmail(email: string): Promise<users> {
     return prisma.users.findUnique(params);
 }
 
+async function findById(user_id: number): Promise<users>
+{
+  return prisma.users.findFirst({where:{id: user_id}});
+}
+
 async function create({name,email,password,category}:CreateUserParams): Promise<users>{
     return prisma.users.create({
         data: {
@@ -26,6 +31,7 @@ async function create({name,email,password,category}:CreateUserParams): Promise<
 
   const userRepository = {
     findByEmail,
+    findById,
     create
   };
   

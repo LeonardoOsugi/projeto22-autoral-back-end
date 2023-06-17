@@ -9,6 +9,10 @@ export function loadEnv() {
       ? '.env.development'
       : '.env';
 
+  console.log(path);
   const currentEnvs = dotenv.config({ path });
+  console.log(currentEnvs);
+  console.log(dotenvExpand.expand(currentEnvs));
   dotenvExpand.expand(currentEnvs);
+  console.log(process.env.DATABASE_URL)
 }
