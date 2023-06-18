@@ -27,7 +27,6 @@ model carts {
   created_at DateTime   @default(dbgenerated("timezone('America/Sao_Paulo'::text, (CURRENT_DATE)::timestamp with time zone)")) @db.Timestamp(6)
   products   products   @relation(fields: [product_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
   users      users      @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  payments   payments[]
 }
 
 model cities {
@@ -41,14 +40,14 @@ model cities {
 
 model payments {
   id               Int           @id @default(autoincrement())
-  cart_id          Int
-  value            String
+  user_id          Int
+  value            Int
   card_issuer      String
   card_last_digits String
   status           PaymentStatus @default(INPROGRESS)
   created_at       DateTime      @default(dbgenerated("timezone('America/Sao_Paulo'::text, (CURRENT_DATE)::timestamp with time zone)")) @db.Timestamp(6)
   updated_at       DateTime?     @db.Timestamp(6)
-  carts            carts         @relation(fields: [cart_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  users            users         @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
 }
 
 model products {
@@ -77,6 +76,7 @@ model users {
   created_at DateTime     @default(dbgenerated("timezone('America/Sao_Paulo'::text, (CURRENT_DATE)::timestamp with time zone)")) @db.Timestamp(6)
   addresses  addresses[]
   carts      carts[]
+  payments payments[]
 }
 
 enum PaymentStatus {

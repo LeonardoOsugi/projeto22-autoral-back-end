@@ -1,4 +1,4 @@
-import { notFoundError } from "@/errors";
+import { forBiddenError, notFoundError } from "@/errors";
 import cartsRepository from "@/repositories/carts-repository";
 import productsRepositories from "@/repositories/products-repositories";
 import userRepository from "@/repositories/users-repositories";
@@ -12,6 +12,8 @@ async function postCarts(user_id: number, product_id: number): Promise<carts>{
     const productExist = await productsRepositories.findProductsById(product_id);
 
     if(!productExist) throw notFoundError();
+
+    if(productExist.slot === 0) throw forBiddenError();
 
     const slot = productExist.slot - 1;
 
@@ -36,6 +38,16 @@ async function deleteCarts(user_id: number, id: number){
     const productExitInCarts = await cartsRepository.findFirstCartsById(id);
 
     if(!productExitInCarts) throw notFoundError();
+
+    const product_id = productExitInCarts.product_id;
+
+    const productExist = await productsRepositories.findProductsById(product_id);
+
+    if(!productExist) throw notFoundError();
+
+    const slot = productExist.slot+1;
+
+    await productsRepositories.updateProductById(product_id, slot);
 
     return await cartsRepository.deleteCarts(id);
 }
