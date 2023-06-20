@@ -1,5 +1,5 @@
 import { prisma } from "@/config"
-import { carts } from "@prisma/client";
+import { carts, products } from "@prisma/client";
 
 
 
@@ -11,8 +11,15 @@ async function createCart(user_id: number, product_id: number): Promise<carts>{
         }});
 }
 
-async function findManyCarts(user_id: number): Promise<carts[]>{
-    return prisma.carts.findMany({where:{user_id}});
+async function findManyCarts(user_id: number):Promise<(carts & {
+    products: products;
+})[]>{
+    return prisma.carts.findMany({
+        where:{user_id},
+        include:{
+            products: true
+        }
+    });
 }
 
 async function findFirstCartsById(id: number): Promise<carts>

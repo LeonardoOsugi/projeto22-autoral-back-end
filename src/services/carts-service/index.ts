@@ -2,7 +2,7 @@ import { forBiddenError, notFoundError } from "@/errors";
 import cartsRepository from "@/repositories/carts-repository";
 import productsRepositories from "@/repositories/products-repositories";
 import userRepository from "@/repositories/users-repositories";
-import { carts } from "@prisma/client";
+import { carts, products } from "@prisma/client";
 
 
 
@@ -24,7 +24,9 @@ async function postCarts(user_id: number, product_id: number): Promise<carts>{
     return cart;
 }
 
-async function getCarts(user_id: number): Promise<carts[]>{
+async function getCarts(user_id: number): Promise<(carts & {
+    products: products;
+})[]>{
     userExist(user_id);
 
     const cartList = await cartsRepository.findManyCarts(user_id);

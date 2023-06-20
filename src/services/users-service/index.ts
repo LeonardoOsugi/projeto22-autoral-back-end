@@ -24,7 +24,9 @@ async function signIn({ email, password }:SignInParams){
 
   const token = jwt.sign({ userId: user.id }, process.env.JWT_SECRET);
 
-  return token;
+  const retorno = {token: token, user_id: user.id}
+
+  return retorno;
 }
 
 async function validateUniqueEmailOrFail(email: string) {
