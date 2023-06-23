@@ -31,11 +31,16 @@ async function deleteCarts(id: number){
     return prisma.carts.delete({where: {id}})
 }
 
+async function deleteByUserId(user_id: number){
+    return prisma.carts.deleteMany({where:{user_id}});
+}
+
 const cartRepository =  {
     createCart,
     findManyCarts,
     findFirstCartsById,
-    deleteCarts
+    deleteCarts,
+    deleteByUserId
 }
 
 export default cartRepository;

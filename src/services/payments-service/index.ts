@@ -1,8 +1,10 @@
 import { notFoundError } from "@/errors";
 import { CardPaymentParams, PaymentParams } from "@/protocols";
+import cartRepository from "@/repositories/carts-repository";
 import paymentRepository from "@/repositories/payments-repository";
 import userRepository from "@/repositories/users-repositories";
 import { payments } from "@prisma/client";
+
 
 async function postPayments(user_id: number, value: number, cardData: CardPaymentParams): Promise<payments>{
     const userExist = await userRepository.findById(user_id);
@@ -13,7 +15,9 @@ async function postPayments(user_id: number, value: number, cardData: CardPaymen
         value,
         cardIssuer: cardData.issuer,
         cardLastDigits: cardData.number.toString().slice(-4),
-      };
+    };
+
+    await cartRepository.deleteByUserId(user_id);
 
     const payment = await paymentRepository.createPayment(user_id, paymentData);
 
