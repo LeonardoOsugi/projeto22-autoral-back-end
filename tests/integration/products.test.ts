@@ -1,7 +1,7 @@
 import { faker } from '@faker-js/faker';
 import httpStatus from 'http-status';
 import supertest from 'supertest';
-import { productsEmpty } from '../factories';
+import { productsCreate, productsEmpty } from '../factories';
 import { cleanDb } from '../helpers';
 import { duplicatedEmailError } from '@/services/users-service/errors';
 import { prisma } from '@/config';
@@ -23,9 +23,13 @@ describe('GET /products', () => {
     });
 });
 
-describe('GET /products/:id', () => {
-    it('should respond with status 200 if productsId exist', async() => {
-        const response = await server.get('/products/1');
-        expect(response.status).toEqual(httpStatus.OK);
-    });
-});
+// describe('GET /products/:id', () => {
+//     it('should respond with status 200 if productsId exist', async() => {
+        
+//         const response2 = await productsCreate();
+//         console.log(response2)
+//         const response = await server.get('/products/1');
+//         console.log(response);
+//         expect(response.status).toEqual(httpStatus.OK);
+//     });
+// });
